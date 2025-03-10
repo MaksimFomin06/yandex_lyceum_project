@@ -26,11 +26,11 @@ class WebProject(QMainWindow):
         self.pushButton_search.clicked.connect(self.maps_api)
 
     def keyPressEvent(self, event):
-        if event.key() == 16777235:
+        if event.key() == 16777238:
             if self.scale_v != 20:
                 self.scale_v += 1
                 self.lineEdit_scale.setText(f"{self.scale_values[self.scale_v]}")
-        elif event.key() == 16777237:
+        elif event.key() == 16777239:
             if self.scale_v != 0:
                 self.scale_v -= 1
                 self.lineEdit_scale.setText(f"{self.scale_values[self.scale_v]}")
