@@ -52,7 +52,6 @@ class WebProject(QMainWindow):
         delta_lon = scale * dx
         new_latitude = latitude + delta_lat
         new_longitude = longitude + delta_lon
-        print(scale, dx, dy)
         if -90 <= new_latitude <= 90 and -180 <= new_longitude <= 180:
             self.lineEdit_latitude.setText(f"{new_latitude}")
             self.lineEdit_longitude.setText(f"{new_longitude}")
