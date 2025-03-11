@@ -34,7 +34,28 @@ class WebProject(QMainWindow):
             if self.scale_v != 0:
                 self.scale_v -= 1
                 self.lineEdit_scale.setText(f"{self.scale_values[self.scale_v]}")
+        elif event.key() == 16777235:
+            self.move_map(0, 1)
+        elif event.key() == 16777237:
+            self.move_map(0, -1)
+        elif event.key() == 16777234:
+            self.move_map(-1, 0)
+        elif event.key() == 16777236:
+            self.move_map(1, 0)
         self.maps_api()
+
+    def move_map(self, dx, dy):
+        latitude = float(self.lineEdit_latitude.text())
+        longitude = float(self.lineEdit_longitude.text())
+        scale = float(self.lineEdit_scale.text())
+        delta_lat = scale * dy
+        delta_lon = scale * dx
+        new_latitude = latitude + delta_lat
+        new_longitude = longitude + delta_lon
+        print(scale, dx, dy)
+        if -90 <= new_latitude <= 90 and -180 <= new_longitude <= 180:
+            self.lineEdit_latitude.setText(f"{new_latitude}")
+            self.lineEdit_longitude.setText(f"{new_longitude}")
 
     def maps_api(self):
         import requests
@@ -52,6 +73,7 @@ class WebProject(QMainWindow):
         pixmap = QPixmap()
         pixmap.loadFromData(response.content)
         self.map_label.setPixmap(pixmap)
+        self.map_label.setFocus()
 
 
 if __name__ == '__main__':
