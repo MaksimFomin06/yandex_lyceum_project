@@ -65,7 +65,7 @@
      <rect>
       <x>10</x>
       <y>120</y>
-      <width>621</width>
+      <width>541</width>
       <height>31</height>
      </rect>
     </property>
@@ -109,6 +109,37 @@
       <width>281</width>
       <height>31</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="checkBox_topics">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>120</y>
+      <width>70</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Темная</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>100</y>
+      <width>71</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Тема карты</string>
     </property>
    </widget>
   </widget>

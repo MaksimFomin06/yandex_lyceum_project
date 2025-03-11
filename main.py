@@ -1,7 +1,6 @@
 import sys
 from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QLabel, QMainWindow
-from PyQt6.QtCore import QEvent, Qt
 from PyQt6.QtGui import QPixmap
 
 
@@ -24,6 +23,7 @@ class WebProject(QMainWindow):
         self.api_key = 'f3a0fe3a-b07e-4840-a1da-06f18b2ddf13'
         self.maps_api()
         self.pushButton_search.clicked.connect(self.maps_api)
+        self.checkBox_topics.clicked.connect(self.maps_api)
 
     def keyPressEvent(self, event):
         if event.key() == 16777238:
@@ -62,8 +62,12 @@ class WebProject(QMainWindow):
         latitude = self.lineEdit_latitude.text()
         longitude = self.lineEdit_longitude.text()
         scale = self.lineEdit_scale.text()
+        if self.checkBox_topics.isChecked():
+            theme = "dark"
+        else:
+            theme = "light"
         ll_spn = f'll={longitude},{latitude}&spn={scale},{scale}'
-        map_request = f"{self.server_address}{ll_spn}&apikey={self.api_key}"
+        map_request = f"{self.server_address}{ll_spn}&apikey={self.api_key}&theme={theme}"
         response = requests.get(map_request)
         if not response.ok:
             print(f"Ошибка выполнения запроса: {response.status_code}")
