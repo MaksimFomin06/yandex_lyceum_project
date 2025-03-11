@@ -65,7 +65,6 @@ class WebProject(QMainWindow):
         ll_spn = f'll={longitude},{latitude}&spn={scale},{scale}'
         map_request = f"{self.server_address}{ll_spn}&apikey={self.api_key}"
         response = requests.get(map_request)
-        print(map_request)
         if not response.ok:
             print(f"Ошибка выполнения запроса: {response.status_code}")
             return
