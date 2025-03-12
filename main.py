@@ -67,7 +67,8 @@ class WebProject(QMainWindow):
         else:
             theme = "light"
         ll_spn = f'll={longitude},{latitude}&spn={scale},{scale}'
-        map_request = f"{self.server_address}{ll_spn}&apikey={self.api_key}&theme={theme}"
+        tags = f"{longitude},{latitude},pm2rdm"
+        map_request = f"{self.server_address}{ll_spn}&theme={theme}&pt={tags}&apikey={self.api_key}"
         response = requests.get(map_request)
         if not response.ok:
             print(f"Ошибка выполнения запроса: {response.status_code}")
