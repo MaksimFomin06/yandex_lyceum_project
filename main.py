@@ -16,14 +16,54 @@ class WebProject(QMainWindow):
         self.map_label.move(20, 215)
         self.scale_values = (0, 0.0001, 0.0002, 0.0004, 0.0007, 0.002, 0.003, 0.006, 0.02, 0.03, 0.05, 0.09, 0.2, 0.4, 0.7, 2, 3, 6, 12, 22, 40)
         self.scale_v = 5
-        self.lineEdit_latitude.setText("55.768603")
-        self.lineEdit_longitude.setText("49.148222")
+        self.latitude = 55.768603 #coord
+        self.longitude = 49.148222 #coord
         self.lineEdit_scale.setText(f"{self.scale_values[self.scale_v]}")
         self.server_address = 'https://static-maps.yandex.ru/v1?'
         self.api_key = 'f3a0fe3a-b07e-4840-a1da-06f18b2ddf13'
         self.maps_api()
         self.pushButton_search.clicked.connect(self.maps_api)
         self.checkBox_topics.clicked.connect(self.maps_api)
+    
+    def get_coord(self):
+        text = self.lineEdit_search.text()
+        if self.is_coordinates(text):
+            text = text.replace(',', ' ').split()
+            self.latitude, self.longitude = text
+
+    def maps_api(self):
+        import requests
+        self.get_coord()
+        latitude = self.latitude #coord 
+        longitude = self.longitude #coord
+        scale = self.lineEdit_scale.text()
+        if self.checkBox_topics.isChecked():
+            theme = "dark"
+        else:
+            theme = "light"
+        ll_spn = f'll={longitude},{latitude}&spn={scale},{scale}' #coord 
+        tags = f"{longitude},{latitude},pm2rdm" #coord
+        map_request = f"{self.server_address}{ll_spn}&theme={theme}&pt={tags}&apikey={self.api_key}"
+        response = requests.get(map_request)
+        if not response.ok:
+            print(f"Ошибка выполнения запроса: {response.status_code}")
+            return
+        pixmap = QPixmap()
+        pixmap.loadFromData(response.content)
+        self.map_label.setPixmap(pixmap)
+        self.map_label.setFocus()
+
+    def move_map(self, dx, dy):
+        latitude = self.latitude #coord 
+        longitude = self.longitude #coord
+        scale = float(self.lineEdit_scale.text())
+        delta_lat = scale * dy
+        delta_lon = scale * dx
+        new_latitude = latitude + delta_lat #coord
+        new_longitude = longitude + delta_lon #coord
+        if -90 <= new_latitude <= 90 and -180 <= new_longitude <= 180:
+            self.latitude = new_latitude #coord
+            self.longitude = new_longitude #coord
 
     def keyPressEvent(self, event):
         if event.key() == 16777238:
@@ -44,40 +84,17 @@ class WebProject(QMainWindow):
             self.move_map(1, 0)
         self.maps_api()
 
-    def move_map(self, dx, dy):
-        latitude = float(self.lineEdit_latitude.text())
-        longitude = float(self.lineEdit_longitude.text())
-        scale = float(self.lineEdit_scale.text())
-        delta_lat = scale * dy
-        delta_lon = scale * dx
-        new_latitude = latitude + delta_lat
-        new_longitude = longitude + delta_lon
-        if -90 <= new_latitude <= 90 and -180 <= new_longitude <= 180:
-            self.lineEdit_latitude.setText(f"{new_latitude}")
-            self.lineEdit_longitude.setText(f"{new_longitude}")
-
-    def maps_api(self):
-        import requests
-
-        latitude = self.lineEdit_latitude.text()
-        longitude = self.lineEdit_longitude.text()
-        scale = self.lineEdit_scale.text()
-        if self.checkBox_topics.isChecked():
-            theme = "dark"
+    def is_coordinates(self, text):
+        text = text.replace(',', ' ').split()
+        if len(text) != 2:
+            return False
         else:
-            theme = "light"
-        ll_spn = f'll={longitude},{latitude}&spn={scale},{scale}'
-        tags = f"{longitude},{latitude},pm2rdm"
-        map_request = f"{self.server_address}{ll_spn}&theme={theme}&pt={tags}&apikey={self.api_key}"
-        response = requests.get(map_request)
-        if not response.ok:
-            print(f"Ошибка выполнения запроса: {response.status_code}")
-            return
-        pixmap = QPixmap()
-        pixmap.loadFromData(response.content)
-        self.map_label.setPixmap(pixmap)
-        self.map_label.setFocus()
-
+            try:
+                lat = float(self.latitude)
+                lon = float(self.longitude)
+            except ValueError:
+                return False
+        return -90 <= lat <= 90 and -180 <= lon <= 180
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

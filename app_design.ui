@@ -14,34 +14,6 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="label_longitude">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>10</y>
-      <width>161</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <pointsize>15</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>Введите долготу</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_longitude">
-    <property name="geometry">
-     <rect>
-      <x>350</x>
-      <y>50</y>
-      <width>281</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_scale">
     <property name="geometry">
      <rect>
@@ -83,7 +55,7 @@
      <string>Найти</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_latitude">
+   <widget class="QLabel" name="label_search">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -98,15 +70,15 @@
      </font>
     </property>
     <property name="text">
-     <string>Введите широту</string>
+     <string>Поиск</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_latitude">
+   <widget class="QLineEdit" name="lineEdit_search">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>50</y>
-      <width>281</width>
+      <width>621</width>
       <height>31</height>
      </rect>
     </property>
