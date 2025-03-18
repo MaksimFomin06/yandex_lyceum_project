@@ -2,6 +2,7 @@ import sys
 from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QLabel, QMainWindow
 from PyQt6.QtGui import QPixmap
+import requests
 
 
 class WebProject(QMainWindow):
@@ -16,8 +17,8 @@ class WebProject(QMainWindow):
         self.map_label.move(20, 215)
         self.scale_values = (0, 0.0001, 0.0002, 0.0004, 0.0007, 0.002, 0.003, 0.006, 0.02, 0.03, 0.05, 0.09, 0.2, 0.4, 0.7, 2, 3, 6, 12, 22, 40)
         self.scale_v = 5
-        self.latitude = 55.768603 #coord
-        self.longitude = 49.148222 #coord
+        self.latitude = 55.768603
+        self.longitude = 49.148222
         self.lineEdit_scale.setText(f"{self.scale_values[self.scale_v]}")
         self.server_address = 'https://static-maps.yandex.ru/v1?'
         self.api_key = 'f3a0fe3a-b07e-4840-a1da-06f18b2ddf13'
@@ -30,21 +31,30 @@ class WebProject(QMainWindow):
         if self.is_coordinates(text):
             text = text.replace(',', ' ').split()
             self.latitude, self.longitude = text
-            self.latitude = float(self.latitude)
-            self.longitude = float(self.longitude)
+        else:
+            server_address = 'http://geocode-maps.yandex.ru/1.x/?'
+            api_key = '8013b162-6b42-4997-9691-77b7074026e0'
+            geocode_request = f"{server_address}apikey={api_key}&geocode={text}&format=json"
+            response = requests.get(geocode_request)
+            if response:
+                json_response = response.json()
+                toponym = json_response["response"]["GeoObjectCollection"]["featureMember"][0]["GeoObject"]
+                toponym_coord = toponym["Point"]["pos"]
+                self.longitude, self.latitude = toponym_coord.split()
+        self.latitude = float(self.latitude)
+        self.longitude = float(self.longitude)
         self.maps_api()
 
     def maps_api(self):
-        import requests
-        latitude = self.latitude #coord 
-        longitude = self.longitude #coord
+        latitude = self.latitude
+        longitude = self.longitude
         scale = self.lineEdit_scale.text()
         if self.checkBox_topics.isChecked():
             theme = "dark"
         else:
             theme = "light"
-        ll_spn = f'll={longitude},{latitude}&spn={scale},{scale}' #coord
-        tags = f"{longitude},{latitude},pm2rdm" #coord
+        ll_spn = f'll={longitude},{latitude}&spn={scale},{scale}'
+        tags = f"{longitude},{latitude},pm2rdm"
         map_request = f"{self.server_address}{ll_spn}&theme={theme}&pt={tags}&apikey={self.api_key}"
         response = requests.get(map_request)
         if not response.ok:
@@ -56,16 +66,16 @@ class WebProject(QMainWindow):
         self.map_label.setFocus()
 
     def move_map(self, dx, dy):
-        latitude = self.latitude #coord 
-        longitude = self.longitude #coord
+        latitude = self.latitude
+        longitude = self.longitude
         scale = float(self.lineEdit_scale.text())
         delta_lat = scale * dy
         delta_lon = scale * dx
-        new_latitude = latitude + delta_lat #coord
-        new_longitude = longitude + delta_lon #coord
+        new_latitude = latitude + delta_lat
+        new_longitude = longitude + delta_lon
         if -90 <= new_latitude <= 90 and -180 <= new_longitude <= 180:
-            self.latitude = new_latitude #coord
-            self.longitude = new_longitude #coord
+            self.latitude = new_latitude
+            self.longitude = new_longitude
 
     def keyPressEvent(self, event):
         if event.key() == 16777238:
