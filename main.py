@@ -94,6 +94,8 @@ class WebProject(QMainWindow):
             self.move_map(-1, 0)
         elif event.key() == 16777236:
             self.move_map(1, 0)
+        elif event.key() == 16777220:
+            self.get_coord()
         self.maps_api()
 
     def is_coordinates(self, text):
