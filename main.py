@@ -22,7 +22,7 @@ class WebProject(QMainWindow):
         self.server_address = 'https://static-maps.yandex.ru/v1?'
         self.api_key = 'f3a0fe3a-b07e-4840-a1da-06f18b2ddf13'
         self.maps_api()
-        self.pushButton_search.clicked.connect(self.maps_api)
+        self.pushButton_search.clicked.connect(self.get_coord)
         self.checkBox_topics.clicked.connect(self.maps_api)
     
     def get_coord(self):
@@ -30,10 +30,12 @@ class WebProject(QMainWindow):
         if self.is_coordinates(text):
             text = text.replace(',', ' ').split()
             self.latitude, self.longitude = text
+            self.latitude = float(self.latitude)
+            self.longitude = float(self.longitude)
+        self.maps_api()
 
     def maps_api(self):
         import requests
-        self.get_coord()
         latitude = self.latitude #coord 
         longitude = self.longitude #coord
         scale = self.lineEdit_scale.text()
@@ -41,7 +43,7 @@ class WebProject(QMainWindow):
             theme = "dark"
         else:
             theme = "light"
-        ll_spn = f'll={longitude},{latitude}&spn={scale},{scale}' #coord 
+        ll_spn = f'll={longitude},{latitude}&spn={scale},{scale}' #coord
         tags = f"{longitude},{latitude},pm2rdm" #coord
         map_request = f"{self.server_address}{ll_spn}&theme={theme}&pt={tags}&apikey={self.api_key}"
         response = requests.get(map_request)
