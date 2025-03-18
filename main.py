@@ -19,6 +19,8 @@ class WebProject(QMainWindow):
         self.scale_v = 5
         self.latitude = 55.768603
         self.longitude = 49.148222
+        self.lat_tag = self.latitude
+        self.long_tag = self.longitude
         self.lineEdit_scale.setText(f"{self.scale_values[self.scale_v]}")
         self.server_address = 'https://static-maps.yandex.ru/v1?'
         self.api_key = 'f3a0fe3a-b07e-4840-a1da-06f18b2ddf13'
@@ -43,6 +45,8 @@ class WebProject(QMainWindow):
                 self.longitude, self.latitude = toponym_coord.split()
         self.latitude = float(self.latitude)
         self.longitude = float(self.longitude)
+        self.lat_tag = self.latitude
+        self.long_tag = self.longitude
         self.maps_api()
 
     def maps_api(self):
@@ -54,7 +58,7 @@ class WebProject(QMainWindow):
         else:
             theme = "light"
         ll_spn = f'll={longitude},{latitude}&spn={scale},{scale}'
-        tags = f"{longitude},{latitude},pm2rdm"
+        tags = f"{self.long_tag},{self.lat_tag},pm2rdm"
         map_request = f"{self.server_address}{ll_spn}&theme={theme}&pt={tags}&apikey={self.api_key}"
         response = requests.get(map_request)
         if not response.ok:
